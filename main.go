@@ -53,6 +53,7 @@ func getSub(f1 fs.FS, subs ...string) fs.FS {
 	}
 	return f1
 }
+
 func addAdmin(app *gin.Engine, conf *config.Type) {
 	// for released dtm, serve admin from local files because the build output has been embed
 	// for testing users, proxy admin to target because the build output has not been embed
@@ -87,7 +88,6 @@ func addAdmin(app *gin.Engine, conf *config.Type) {
 }
 
 func proxyAdmin(c *gin.Context) {
-
 	u := &url.URL{}
 	u.Scheme = "http"
 	u.Host = target
@@ -98,8 +98,8 @@ func proxyAdmin(c *gin.Context) {
 		ret := fmt.Sprintf("http proxy error %v", err)
 		_, _ = rw.Write([]byte(ret))
 	}
+
 	logger.Debugf("proxy admin to %s", target)
 	c.Request.Host = target
 	proxy.ServeHTTP(c.Writer, c.Request)
-
 }

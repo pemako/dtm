@@ -68,7 +68,8 @@ func initializeBuckets(db *bolt.DB) error {
 }
 
 // cleanupExpiredData will clean the expired data in boltdb, the
-//    expired time is configurable.
+//
+//	expired time is configurable.
 func cleanupExpiredData(expire time.Duration, db *bolt.DB) error {
 	if expire <= 0 {
 		return nil

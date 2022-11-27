@@ -35,6 +35,7 @@ func Main(version *string) (*gin.Engine, *config.Type) {
 	if *version == "" {
 		*version = "v0.0.0-dev"
 	}
+
 	dtmsvr.Version = *version
 	if flag.NArg() > 0 || *isHelp {
 		usage()
@@ -43,22 +44,27 @@ func Main(version *string) (*gin.Engine, *config.Type) {
 		fmt.Printf("dtm version: %s\n", *version)
 		return nil, nil
 	}
+
 	logger.Infof("dtm version is: %s", *version)
 	config.MustLoadConfig(*confFile)
 	if config.Config.TimeZoneOffset != "" {
 		time.Local = time.FixedZone("UTC", dtmimp.MustAtoi(config.Config.TimeZoneOffset)*3600)
 	}
+
 	conf := &config.Config
 	if *isDebug {
 		conf.LogLevel = "debug"
 	}
+
 	logger.InitLog2(conf.LogLevel, conf.Log.Outputs, conf.Log.RotationEnable, conf.Log.RotationConfigJSON)
 	if *isReset {
 		dtmsvr.PopulateDB(false)
 	}
+
 	_, _ = maxprocs.Set(maxprocs.Logger(logger.Infof))
 	registry.WaitStoreUp()
 	app := dtmsvr.StartSvr()       // start dtmsvr api
 	go dtmsvr.CronExpiredTrans(-1) // start dtmsvr cron job
+
 	return app, &config.Config
 }

@@ -2,7 +2,7 @@ package busi
 
 import (
 	"github.com/gin-gonic/gin"
-	grpc "google.golang.org/grpc"
+	"google.golang.org/grpc"
 )
 
 // Startup startup the busi's grpc and http service
